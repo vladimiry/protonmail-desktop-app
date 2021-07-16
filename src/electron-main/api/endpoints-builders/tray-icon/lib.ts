@@ -1,29 +1,30 @@
-import {Bitmap, decodePNGFromStream, encodePNGToStream, make, registerFont} from "pureimage";
 import {NativeImage, nativeImage} from "electron";
 import {PassThrough} from "stream";
 import {createReadStream} from "fs";
 import {hslToRgb, rgbToHsl, toHsl} from "color-fns";
 import {lanczos} from "@rgba-image/lanczos";
 
+import {Bitmap} from "pureimage/types/bitmap";
 import {CircleConfig, ImageBundle} from "./model";
 import {PLATFORM} from "src/electron-main/constants";
+import {decodePNGFromStream, encodePNGToStream, make, registerFont} from "pureimage";
 
 // TODO explore https://github.com/vonderheide/mono-bitmap as a potential "pureimage" replacement
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const pureimageUInt32: Readonly<{
     getBytesBigEndian(
-        rgba: ReturnType<import("pureimage").Bitmap["getPixelRGBA"]>,
+        rgba: ReturnType<Bitmap["getPixelRGBA"]>,
     ): readonly [number, number, number, number]; // rgba
     fromBytesBigEndian(
         ...args: ReturnType<typeof pureimageUInt32["getBytesBigEndian"]> // eslint-disable-line  @typescript-eslint/no-use-before-define
-    ): ReturnType<import("pureimage").Bitmap["getPixelRGBA"]>;
+    ): ReturnType<Bitmap["getPixelRGBA"]>;
     // TODO TS: import "pureimage/src/uint32" using ES import syntax
 }> = require("pureimage/src/uint32"); // eslint-disable-line @typescript-eslint/no-var-requires
 
 const buildCircle: (rad: number, color: string) => Bitmap = (rad, color) => {
-    const bitmap = make(rad * 2, rad * 2);
-    const ctx = bitmap.getContext("2d");
+    const bitmap = make(rad * 2, rad * 2, null);
+    const ctx = bitmap.getContext();
 
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -64,7 +65,7 @@ const encodePNGToBuffer: (input: Bitmap) => Promise<Buffer> = async (input) => {
 };
 
 const cloneBitmap: (input: Pick<Bitmap, "width" | "height" | "data">) => Bitmap = (input) => {
-    const output = make(input.width, input.height);
+    const output = make(input.width, input.height, null);
 
     output.data = Buffer.from(input.data);
 
@@ -84,14 +85,14 @@ const bitmapToNativeImage: (source: Bitmap) => Promise<NativeImage> = (
 
                 lanczos(
                     {
-                        data: Uint8ClampedArray.from(source.data),
+                        data: new Uint8ClampedArray(source.data),
                         width: source.width,
                         height: source.height,
                     },
                     dest,
                 );
 
-                const result = make(dest.width, dest.height);
+                const result = make(dest.width, dest.height, null);
 
                 result.data = Buffer.from(dest.data);
 
@@ -190,7 +191,7 @@ export async function loggedOutBundle({bitmap: source}: ImageBundle, config: Cir
     const bitmap = cloneBitmap(source);
 
     skipSettingTransparentPixels(bitmap);
-    bitmap.getContext("2d").drawImage(circle, 0, 0, width, height, 0, 0, width, height);
+    bitmap.getContext().drawImage(circle, 0, 0, width, height, 0, 0, width, height);
 
     return {
         bitmap,
@@ -219,12 +220,23 @@ export async function unreadNative(
         const size = rad * scale;
         const x = size - rad * 1.1;
         const y = size + rad * scale * (text.length - 1) * .1;
-        const ctx = textDrawArea.getContext("2d");
+        const ctx = textDrawArea.getContext();
 
-        await new Promise<void>((resolve) => registerFont(fontFilePath, fontFamily).load(resolve));
+        await new Promise<ReturnType<(typeof registerFont)>>((resolve) => {
+            const fontRecord = registerFont(
+                fontFilePath,
+                fontFamily,
+                // TODO TS drop "pureimage" type casting on "registerFont" call
+                undefined as unknown as number,
+                undefined as unknown as string,
+                undefined as unknown as string,
+            );
+            fontRecord.load(() => resolve(fontRecord));
+        });
 
+        // TODO TS drop "pureimage" type casting on assigning "context.font"
+        ctx.font = `${size}pt ${fontFamily}` as unknown as typeof ctx.font;
         ctx.fillStyle = config.textColor;
-        ctx.font = `${size}pt ${fontFamily}`;
         ctx.fillText(text, x, y);
 
         return textDrawArea;
@@ -235,7 +247,7 @@ export async function unreadNative(
     skipSettingTransparentPixels(icon);
 
     icon
-        .getContext("2d")
+        .getContext()
         .drawImage(circle, 0, 0, width, height, icon.width - width, icon.height - height, width, height);
 
     return {

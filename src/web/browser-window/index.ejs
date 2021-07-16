@@ -9,7 +9,7 @@
             height: 100%;
         }
     </style>
-    <% /* TODO enable resource ordering via the HtmlWebpackPlugin/MiniCssExtractPlugin options */ %>
+    <% /* TODO enable resource ordering via the HtmlWebpackPlugin/MiniCssExtractPlugin options (dark/light theming matter) */ %>
     <link href="index.css" rel="stylesheet">
     <link href="shared-vendor-light.css" rel="stylesheet">
     <link href="shared-vendor-dark.css" rel="stylesheet">
@@ -18,11 +18,6 @@
     <link href="app-theming-light.css" rel="stylesheet">
     <link href="app-theming-dark.css" rel="stylesheet">
     <script defer src="index.js"></script>
-    <script defer src="css.worker.js"></script>
-    <script defer src="editor.worker.js"></script>
-    <script defer src="html.worker.js"></script>
-    <script defer src="json.worker.js"></script>
-    <script defer src="ts.worker.js"></script>
 </head>
 <body>
 <electron-mail-app class="w-100 h-100 d-flex"></electron-mail-app>

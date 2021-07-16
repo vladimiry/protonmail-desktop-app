@@ -55,7 +55,7 @@ export async function execShell(
 ): Promise<Unpacked<ReturnType<typeof spawnAsync>>> {
     {
         const stringifiedOptions = JSON.stringify({
-            ...omit(options || {}, ["env"]),
+            ...(options && omit({...options}, ["env"])),
             ...{
                 whitelistedEnv: options?.env && printEnvWhitelist?.length
                     ? pick(options.env, [...printEnvWhitelist])

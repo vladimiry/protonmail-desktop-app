@@ -3,16 +3,14 @@ import {Observable, Subscription} from "rxjs";
 import {distinctUntilChanged} from "rxjs/operators";
 import {ofType} from "@ngrx/effects";
 
+import css from "css-loader?modules=icss!sass-loader!./index.scss";
 import {IPC_MAIN_API_NOTIFICATION_ACTIONS} from "src/shared/api/main-process/actions";
 import {IpcMainServiceScan} from "src/shared/api/main-process";
 import {ONE_SECOND_MS, PACKAGE_NAME} from "src/shared/constants";
 import {buildLoggerBundle, resolveIpcMainApi} from "src/electron-preload/lib/util";
 
-// TODO TS add declaration for "index.scss" and use "ES import" then
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
-const css = require(`to-string-loader!css-loader?esModule=false!sass-loader!./index.scss`);
-
-const renderVisibleClass = "visible"; // WARN: same value as in "./index.scss"
+const [[, cssCode]] = css;
+const {locals: {renderVisibleClass}} = css;
 
 export class HoveredHrefHighlightElement extends HTMLElement {
     public static readonly tagName = `${PACKAGE_NAME}-hovered-href-highlight`.toLowerCase();
@@ -39,7 +37,7 @@ export class HoveredHrefHighlightElement extends HTMLElement {
         super();
         this.logger.info(nameof(HoveredHrefHighlightElement.prototype.constructor));
         this.root = this.attachShadow({mode: "closed"});
-        this.root.innerHTML = `<style>${String(css)}</style>`;
+        this.root.innerHTML = `<style>${String(cssCode)}</style>`;
         this.el = this.root.appendChild(document.createElement("div"));
         window.addEventListener(...this.beforeUnloadEventHandlingArgs);
     }

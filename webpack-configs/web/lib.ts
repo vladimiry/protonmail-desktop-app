@@ -20,9 +20,6 @@ export function cssRuleSetRules(): RuleSetRule[] {
     return [
         {
             loader: "css-loader",
-            options: {
-                esModule: false,
-            },
         },
         {
             loader: "postcss-loader",
@@ -63,11 +60,14 @@ export function buildMinimalWebConfig(
                     rules: [
                         {
                             test: /\.html$/,
-                            loader: "html-loader",
-                            options: {
-                                minimize: false,
-                                esModule: false,
-                            },
+                            use: [
+                                {
+                                    loader: "html-loader",
+                                    options: {
+                                        minimize: false,
+                                    },
+                                },
+                            ],
                         },
                         {
                             test: /\.css$/,
@@ -89,16 +89,7 @@ export function buildMinimalWebConfig(
                         },
                         {
                             test: /\.(eot|ttf|otf|woff|woff2|ico|gif|png|jpe?g|svg)$/i,
-                            use: {
-                                loader: "url-loader",
-                                options: {
-                                    limit: 4096,
-                                    name: "assets/[name].[hash].[ext]",
-                                    esModule: false,
-                                    // TODO webpack url/file-loader:
-                                    //      drop "esModule" flag on https://github.com/webpack-contrib/html-loader/issues/203 resolving
-                                },
-                            },
+                            type: "asset",
                         },
                     ],
                 },
@@ -135,16 +126,7 @@ export function buildBaseWebConfig(
         production: {},
         development: {},
         e2e: {},
-        test: {
-            module: {
-                rules: [
-                    {
-                        test: /\.(eot|ttf|otf|woff|woff2|ico|gif|png|jpe?g|svg)$/i,
-                        loader: "null-loader",
-                    },
-                ],
-            },
-        },
+        test: {},
     };
 
     return webpackMerge(

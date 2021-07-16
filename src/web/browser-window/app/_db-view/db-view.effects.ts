@@ -173,7 +173,7 @@ export class DbViewEffects {
                                     : fullTextSearchTimeoutMs * 1.2,
                                 serialization: "msgpackr",
                             },
-                        )(omit(payload, ["accountIndex"])),
+                        )(omit({...payload}, ["accountIndex"])),
                     ).pipe(
                         mergeMap((value) => [
                             DB_VIEW_ACTIONS.SelectMail({webAccountPk}),

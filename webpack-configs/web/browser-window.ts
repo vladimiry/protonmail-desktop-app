@@ -97,7 +97,6 @@ const config = buildBaseWebConfig(
                 const angularCompilerPluginOptions: NoExtraProps<AngularWebpackPluginOptions> = {
                     tsconfig: tsConfigFile,
                     compilerOptions,
-                    // entryModule: `${browserWindowAppPath("./app.module")}#AppModule`,
                     jitMode: !angularCompilationFlags.aot, // renamed from "skipCodeGeneration" since @angular v12
                     directTemplateLoading: false,
                     emitClassMetadata: false,
@@ -161,7 +160,7 @@ const config = buildBaseWebConfig(
             "monaco-editor.editor.worker": rootRelativePath("./node_modules/monaco-editor/esm/vs/editor/editor.worker.js"),
         },
         htmlWebpackPlugin: {
-            // TODO enable resource ordering via the HtmlWebpackPlugin/MiniCssExtractPlugin options
+            // TODO enable resource ordering via the HtmlWebpackPlugin/MiniCssExtractPlugin options (dark/light theming matter)
             inject: false,
         },
     },

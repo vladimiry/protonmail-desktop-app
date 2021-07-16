@@ -1,4 +1,4 @@
-import {Bitmap} from "pureimage";
+import {Bitmap} from "pureimage/types/bitmap";
 import {NativeImage} from "electron";
 
 export interface CircleConfig {

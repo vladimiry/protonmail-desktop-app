@@ -1,6 +1,8 @@
 @use "src/web/theming-variables-dark" as theming-variables-dark;
 @import "src/web/variables";
 
+$hovered-href-highlighter-render-visible-class: "visible";
+
 :host {
     $background-color: theming-variables-dark.$secondary;
     $padding: 0.2em;
@@ -22,8 +24,12 @@
         margin: $padding-l $padding;
         padding: $padding $padding-l;
 
-        &.visible {
+        &.#{$hovered-href-highlighter-render-visible-class} {
             display: flex;
         }
     }
+}
+
+:export {
+    renderVisibleClass: #{$hovered-href-highlighter-render-visible-class},
 }
