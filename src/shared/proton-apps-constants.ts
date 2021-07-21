@@ -21,7 +21,7 @@ export const PROVIDER_REPO_MAP = {
         repoRelativeDistDir: "./dist",
         baseDirName: "",
         repo: "https://github.com/ProtonMail/proton-mail.git",
-        commit: "b0ae512f597a9e25cb8e923b4d4387daa0c76ec1",
+        commit: "407d246877cc6fd2c85b3698790f74090d772b0e",
         protonPack: {
             appConfig: {clientId: "WebMail"},
             webpackIndexEntryItems: [
@@ -50,14 +50,14 @@ export const PROVIDER_REPO_MAP = {
         repoRelativeDistDir: "./dist",
         baseDirName: "account",
         repo: "https://github.com/ProtonMail/proton-account.git",
-        commit: "f7a32664cea08cb4996ddc6ee458f31ad823c0f8",
+        commit: "91ce57749137e1fbe6d11b779890b8c5d2bc872a",
         protonPack: {appConfig: {clientId: "WebAccount"}}
     },
     [PROVIDER_REPO_NAMES[2]]: {
         repoRelativeDistDir: "./dist",
         baseDirName: "calendar",
         repo: "https://github.com/ProtonMail/proton-calendar.git",
-        commit: "b5dbf840b2162456b104e81b75baaedc9144fd1b",
+        commit: "cc7866fa1871b54232117f4369195d5327f49b0b",
         protonPack: {
             appConfig: {clientId: "WebCalendar"},
             webpackIndexEntryItems: [

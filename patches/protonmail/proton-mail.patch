@@ -64,12 +64,12 @@ index eec7ed5..81ab9cd 100644
      const showSubTitleSection = wasIndexingDone(user.ID) && !isRefreshing && isDBLimited;
 
 diff --git a/src/app/containers/EncryptedSearchProvider.tsx b/src/app/containers/EncryptedSearchProvider.tsx
-index b46caa6..7b99735 100644
+index 7cf1ec8..8ff1043 100644
 --- a/src/app/containers/EncryptedSearchProvider.tsx
 +++ b/src/app/containers/EncryptedSearchProvider.tsx
-@@ -537,7 +537,7 @@ const EncryptedSearchProvider = ({ children }: Props) => {
+@@ -559,7 +559,7 @@ const EncryptedSearchProvider = ({ children }: Props) => {
          const t1 = performance.now();
-         const { dbExists, esEnabled, isCacheReady } = esDBStatus;
+         const { dbExists, esEnabled, isCacheReady, cachePromise } = esStatus;
 
 -        if (!dbExists || !esEnabled) {
 +        if (true) {
